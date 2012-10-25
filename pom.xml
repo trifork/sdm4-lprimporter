@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dk.nsi.stamdata4</groupId>
 		<artifactId>sdm-parent</artifactId>
-		<version>4.5</version>
+		<version>4.6</version>
 	</parent>
 
 	<artifactId>lprimporter</artifactId>
