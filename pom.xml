@@ -9,13 +9,13 @@
 
 	<artifactId>lprimporter</artifactId>
 	<packaging>war</packaging>
-	<version>4.0</version>
+	<version>4.1-SNAPSHOT</version>
 
     <scm>
         <url>scm:git:git@github.com:trifork/sdm4-lprimporter</url>
         <connection>scm:git:git@github.com:trifork/sdm4-lprimporter.git</connection>
         <developerConnection>scm:git:git@github.com:trifork/sdm4-lprimporter.git</developerConnection>
-      <tag>lprimporter-4.0</tag>
+      <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>JIRA</system>
