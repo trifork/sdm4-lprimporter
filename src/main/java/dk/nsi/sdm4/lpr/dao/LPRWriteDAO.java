@@ -44,4 +44,6 @@ public interface LPRWriteDAO extends LPRReadDAO {
 	public abstract long insertOrUpdate(LPR lpr) throws DAOException;
 
     public void deleteByLprReference(String externalReferenceForDeletion) throws DAOException;
+
+    public boolean containsLPRRecordWithReference(String reference);
 }

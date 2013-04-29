@@ -91,6 +91,12 @@ public class LPRDAOImpl implements LPRWriteDAO {
         }
     }
 
+    @Override
+    public boolean containsLPRRecordWithReference(String reference) {
+        long cnt = jdbcTemplate.queryForLong("SELECT COUNT(1) FROM LPR WHERE lprReference = ?", reference);
+        return (cnt > 0);
+    }
+
     /**
      * Inserts a LPR record if the lprReference doesn't exists in the database,
      * If the lprReference exists already, all values are updated

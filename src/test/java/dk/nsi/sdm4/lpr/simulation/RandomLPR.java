@@ -115,7 +115,8 @@ public class RandomLPR {
             types.add(type);
         }
 
-        relationType = testDataUtil.choice(types);
+        // TODO: Temp code should be removed when the importer handles SHAK Identifiers again
+        relationType = LprRelationType.DUSAS; //testDataUtil.choice(types);
         if (relationType.definesHospital()) {
             organisationIdentifier = testDataUtil.randomHospitalOrganisationIdentifier().toString();
         } else if (relationType.definesDoctor()) {

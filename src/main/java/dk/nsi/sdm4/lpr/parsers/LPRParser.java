@@ -76,11 +76,13 @@ public class LPRParser implements Parser {
 	        while ((line = bf.readLine()) != null) {
 	            if (!line.startsWith("#")) {
 	                LprAction action = LPRLineParser.parseLine(line);
-	                batch.add(action);
-	                counter++;
-	                if (counter % progressBatchSize == 0) {
-		                log.info("Progress: " + counter);
-	                }
+                    if (!shouldActionBeIgnored(action)) {
+                        batch.add(action);
+                        counter++;
+                        if (counter % progressBatchSize == 0) {
+                            log.info("Progress: " + counter);
+                        }
+                    }
 	                if (batch.size() == batchSize) {
 		                commitBatch();
 	                }
@@ -96,7 +98,21 @@ public class LPRParser implements Parser {
         }
     }
 
-	@Override
+    private boolean shouldActionBeIgnored(LprAction action) {
+        if (action.actionType == LprAction.ActionType.INSERTION) {
+            // If this action is a hospital then the records contains a SHAK Identifiers should be ignored
+            if (action.lprForInsertion != null && action.lprForInsertion.getRelationType() != null) {
+                return action.lprForInsertion.getRelationType().definesHospital();
+            }
+        } else {
+            // We cannot seperate SHAK from Provider identifiers when doing deletes
+            // so ask the database if this records exist.
+            return !dao.containsLPRRecordWithReference(action.lprReferenceForDeletion);
+        }
+        return false;
+    }
+
+    @Override
 	public String getHome() {
 		return "lprimporter";
 	}
