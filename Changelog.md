@@ -8,6 +8,4 @@
 ## lprimporter 4.2   
 *  Opgrading til sdm4-core 4.3, der løser
    NSPSUPPORT-126: ParserExecutor logger filers absolutte stier og md5-summer inden parser behandler dem
-
-## lprimporter 4.3
 *  SDM-28: Importeren ignorerer nu records med SKS Numre.
