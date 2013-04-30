@@ -136,9 +136,7 @@ public class LPRParserTest {
         assertEquals(0, getAllLprsAsSet().size());
     }
 
-    // TODO Back in when importer handles SHAK identifers
     @Test
-    @Ignore
     public void testUpdate() throws IOException, DAOException {
         assertThatJobParsesFile("LPRParserTest-testInsertion.csv");
 

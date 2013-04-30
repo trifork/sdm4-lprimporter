@@ -26,6 +26,7 @@
  */
 package dk.nsi.sdm4.lpr.relation.model;
 
+import dk.nsi.sdm4.lpr.common.exception.InvalidDoctorOrganisationIdentifier;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -63,10 +64,7 @@ public class DoctorOrganisationIdentifier implements Serializable {
 		if (isStringValidDoctorOrganisationIdentifier(doctorOrganisationIdentiferStringRepresentation)) {
 			return new DoctorOrganisationIdentifier(doctorOrganisationIdentiferStringRepresentation);
 		} else {
-			throw new IllegalArgumentException("Invalid doctor organisation identifier: "
-					+ doctorOrganisationIdentiferStringRepresentation
-					+ ". A doctor organisation identifier (ydernummer) must have a length of one of "
-					+ VALID_LENGTHS_OF_DOCTOR_ORGANISATION_IDENTIFIERS);
+            throw new InvalidDoctorOrganisationIdentifier(doctorOrganisationIdentiferStringRepresentation);
 		}
 	}
 

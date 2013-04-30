@@ -28,6 +28,7 @@ package dk.nsi.sdm4.lpr.parsers;
 
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.lpr.common.exception.InvalidDoctorOrganisationIdentifier;
 import dk.nsi.sdm4.lpr.common.splunk.SplunkLogger;
 import dk.nsi.sdm4.lpr.dao.LPRWriteDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,13 +76,18 @@ public class LPRParser implements Parser {
 	        long counter = 0;
 	        while ((line = bf.readLine()) != null) {
 	            if (!line.startsWith("#")) {
-	                LprAction action = LPRLineParser.parseLine(line);
-                    if (!shouldActionBeIgnored(action)) {
-                        batch.add(action);
-                        counter++;
-                        if (counter % progressBatchSize == 0) {
-                            log.info("Progress: " + counter);
+                    try {
+                        LprAction action = LPRLineParser.parseLine(line);
+                        if (!shouldActionBeIgnored(action)) {
+                            batch.add(action);
+                            counter++;
+                            if (counter % progressBatchSize == 0) {
+                                log.info("Progress: " + counter);
+                            }
                         }
+                    } catch (InvalidDoctorOrganisationIdentifier ex) {
+                        // We just ignore records with invalid doctor identifiers
+                        log.info(ex.getMessage());
                     }
 	                if (batch.size() == batchSize) {
 		                commitBatch();
@@ -98,18 +104,10 @@ public class LPRParser implements Parser {
         }
     }
 
+    // Because we are ignoring records with invalid identifiers when importing, we can get delete records with IDs that does not exist
     private boolean shouldActionBeIgnored(LprAction action) {
-        if (action.actionType == LprAction.ActionType.INSERTION) {
-            // If this action is a hospital then the records contains a SHAK Identifiers should be ignored
-            if (action.lprForInsertion != null && action.lprForInsertion.getRelationType() != null) {
-                return action.lprForInsertion.getRelationType().definesHospital();
-            }
-        } else {
-            // We cannot seperate SHAK from Provider identifiers when doing deletes
-            // so ask the database if this records exist.
-            return !dao.containsLPRRecordWithReference(action.lprReferenceForDeletion);
-        }
-        return false;
+        return action.actionType == LprAction.ActionType.DELETION &&
+                !dao.containsLPRRecordWithReference(action.lprReferenceForDeletion);
     }
 
     @Override
