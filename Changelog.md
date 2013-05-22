@@ -13,3 +13,7 @@
 ## lprimporter 4.3
 *  SDM-28: Rettelse fra 4.2 er rettet tilbage og lavet om så vi nu accepterer alle numre som overholder længde kravene
            hvis ikke så ignore vi recorden og fortsætter.
+
+## lprimporter 4.4
+*  SDM-33: Rettet så vi nu godtager ydernumre på under 5 tegn.
+*  Opdateret core, parent og testutils dependencies til nyeste releases

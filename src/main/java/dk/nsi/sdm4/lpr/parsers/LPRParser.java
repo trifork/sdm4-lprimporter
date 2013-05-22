@@ -76,18 +76,11 @@ public class LPRParser implements Parser {
 	        long counter = 0;
 	        while ((line = bf.readLine()) != null) {
 	            if (!line.startsWith("#")) {
-                    try {
-                        LprAction action = LPRLineParser.parseLine(line);
-                        if (!shouldActionBeIgnored(action)) {
-                            batch.add(action);
-                            counter++;
-                            if (counter % progressBatchSize == 0) {
-                                log.info("Progress: " + counter);
-                            }
-                        }
-                    } catch (InvalidDoctorOrganisationIdentifier ex) {
-                        // We just ignore records with invalid doctor identifiers
-                        log.info(ex.getMessage());
+                    LprAction action = LPRLineParser.parseLine(line);
+                    batch.add(action);
+                    counter++;
+                    if (counter % progressBatchSize == 0) {
+                        log.info("Progress: " + counter);
                     }
 	                if (batch.size() == batchSize) {
 		                commitBatch();
@@ -102,12 +95,6 @@ public class LPRParser implements Parser {
         } finally {
             closeQuietly(bf);
         }
-    }
-
-    // Because we are ignoring records with invalid identifiers when importing, we can get delete records with IDs that does not exist
-    private boolean shouldActionBeIgnored(LprAction action) {
-        return action.actionType == LprAction.ActionType.DELETION &&
-                !dao.containsLPRRecordWithReference(action.lprReferenceForDeletion);
     }
 
     @Override

@@ -145,6 +145,14 @@ public class LprLineParserOnRealDataTest {
         assertEquals(expected, action.lprForInsertion);
     }
 
+    // Jira SDM-28
+    @Test
+    public void testParseShortYdernumLine() {
+        String line = "9915;AFAFEDABCDE031D41A0E44216EE200C107CFF52B;15-11-2012 00:00;;Y;99150019AFAFEDABCDE031D41A0E44216EE200C107CFF52B201211150000";
+        LprAction action = LPRLineParser.parseLine(line);
+        assertEquals(LprAction.ActionType.INSERTION, action.actionType);
+    }
+
     @Test
     public void testParseDeletion() throws ParserException {
         String line = "123456;;18-05-2011 00:00;;X;123456010B0E20A894AC8C363EC84CDE7CD73C6FB1953046180520110000";

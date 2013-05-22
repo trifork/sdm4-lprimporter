@@ -46,18 +46,9 @@ import java.util.Set;
 public class DoctorOrganisationIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static final Set<Integer> VALID_LENGTHS_OF_DOCTOR_ORGANISATION_IDENTIFIERS;
-	static {
-		Set<Integer> validLengthsOfDoctorOrganisationIdentifiers = new HashSet<Integer>();
-		validLengthsOfDoctorOrganisationIdentifiers.add(5);
-		validLengthsOfDoctorOrganisationIdentifiers.add(6);
-		VALID_LENGTHS_OF_DOCTOR_ORGANISATION_IDENTIFIERS = Collections
-				.unmodifiableSet(validLengthsOfDoctorOrganisationIdentifiers);
-	}
 
 	public static boolean isStringValidDoctorOrganisationIdentifier(String s) {
-		return VALID_LENGTHS_OF_DOCTOR_ORGANISATION_IDENTIFIERS.contains(s.length());
+        return (s.length() >= 1 && s.length() <= 6);
 	}
 
 	public static DoctorOrganisationIdentifier newInstance(String doctorOrganisationIdentiferStringRepresentation) {
