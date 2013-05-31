@@ -180,7 +180,7 @@ public class LPRParserTest {
 	    String filename = getPathToNamedFileInEmptyDir("lpr_2011_10_05_orignal_name_was_BR_051020111448.CSV.csv");
         copyResourceToFile("BR_190520111525.CSV", filename);
 
-        parser.process(new File(filename).getParentFile());
+        parser.process(new File(filename).getParentFile(), "");
     }
 
     private void assertThatDatabaseContainsOnly(LPR expectedLpr) throws DAOException {
@@ -210,7 +210,7 @@ public class LPRParserTest {
     }
 
     private void assertThatJobRunsSuccesfully(String filename) {
-	    parser.process(new File(filename).getParentFile());
+	    parser.process(new File(filename).getParentFile(), "");
     }
 
     private Set<LPR> makeRandomLprs(int numberOfRecords) {

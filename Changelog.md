@@ -17,3 +17,8 @@
 ## lprimporter 4.4
 *  SDM-33: Rettet så vi nu godtager ydernumre på under 5 tegn.
 *  Opdateret core, parent og testutils dependencies til nyeste releases
+
+## lprimporter 4.5
+* Opdateret SDM4 depencencies
+* SDM-5 SLA-log fra SDM4-importere følger ikke standarden
+

@@ -31,6 +31,8 @@ import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.lpr.common.exception.InvalidDoctorOrganisationIdentifier;
 import dk.nsi.sdm4.lpr.common.splunk.SplunkLogger;
 import dk.nsi.sdm4.lpr.dao.LPRWriteDAO;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.TransactionStatus;
@@ -56,16 +58,23 @@ public class LPRParser implements Parser {
 	@Value("${spooler.lprimporter.batchsize}")
 	protected int batchSize;
 
+    @Autowired
+    private SLALogger slaLogger;
+
 	private int progressBatchSize = 10000;
 
 	List<LprAction> batch = new ArrayList<LprAction>(batchSize);
 
 	/**
-	 * @see Parser#process(java.io.File)
+	 * @see Parser#process(java.io.File, String)
 	 */
 	@Override
-	public void process(File dataset) throws ParserException {
+	public void process(File dataset, String identifier) throws ParserException {
 		File file = findSingleFileOrComplain(dataset);
+
+        SLALogItem slaLogItem = slaLogger.createLogItem(getHome()+".process", "SDM4."+getHome()+".process");
+        slaLogItem.setMessageId(identifier);
+        slaLogItem.addCallParameter(Parser.SLA_INPUT_NAME, dataset.getAbsolutePath());
 
         BufferedReader bf = null;
         String line = null;
@@ -89,7 +98,13 @@ public class LPRParser implements Parser {
             }
 
 	        commitBatch(); // commit den rest der kan være fra sidste gennemløb
+
+            slaLogItem.addCallParameter(Parser.SLA_RECORDS_PROCESSED_MAME, ""+counter);
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
         } catch (Exception e) {
+            slaLogItem.setCallResultError("LPRImporter failed - Cause: " + e.getMessage());
+            slaLogItem.store();
             // This is potentially a security issue as the raw data is exposed (but it is hashed)
             throw new ParserException(e.getMessage() + " in line \"" + line +  "\" of file " + file.getAbsolutePath(), e);
         } finally {
